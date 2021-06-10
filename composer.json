@@ -1,0 +1,29 @@
+{
+    "name": "despatchcloudturkey/logging-api-laravel",
+    "description": "The Logging API laravel bridge.",
+    "authors": [
+        {
+            "name": "Anilcan Cakir",
+            "email": "anilcan@despatchcloud.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "laravel/framework": "^7.0|^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DespatchCloud\\LoggingAPI\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DespatchCloud\\LoggingAPI\\Providers\\LoggingAPIServiceProvider"
+            ],
+            "aliases": {
+                "LoggingAPI": "DespatchCloud\\LoggingAPI\\Facades\\LoggingAPI"
+            }
+        }
+    }
+}
