@@ -117,6 +117,31 @@ class LoggingAPIClient
     }
 
     /**
+     * Delete the log.
+     *
+     * @param string $id
+     * @return string
+     * @throws ClientException
+     */
+    public function delete(string $id): string
+    {
+        $ch = curl_init($this->url("/api/logs/{$id}/delete"));
+
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers([
+            'Content-Type: application/json',
+        ]));
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        return $this->processResult($status, $result);
+    }
+
+    /**
      * Get the log content.
      *
      * @param string $id
@@ -133,40 +158,6 @@ class LoggingAPIClient
         curl_close($ch);
 
         return $this->processResult($status, $result);
-    }
-
-    /**
-     * Create a streamed response for a given file.
-     *
-     * @param  string  $path
-     * @param  string|null  $name
-     * @param  array|null  $headers
-     * @param  string|null  $disposition
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
-     */
-    public function responsetest($path, $name = null, array $headers = [], $disposition = 'inline')
-    {
-        $response = new StreamedResponse;
-
-        $filename = $name ?? basename($path);
-
-        $disposition = $response->headers->makeDisposition(
-            $disposition, $filename, $this->fallbackName($filename)
-        );
-
-        $response->headers->replace($headers + [
-                'Content-Type' => $this->mimeType($path),
-                'Content-Length' => $this->size($path),
-                'Content-Disposition' => $disposition,
-            ]);
-
-        $response->setCallback(function () use ($path) {
-            $stream = $this->readStream($path);
-            fpassthru($stream);
-            fclose($stream);
-        });
-
-        return $response;
     }
 
     /**
