@@ -9,7 +9,7 @@
 Add as dependency on your project.
 
 ```bash
-composer require composer require despatchcloudturkey/logging-api-laravel
+composer require despatchcloudturkey/logging-api-laravel
 ```
 
 Set your application API credentials to your `.env` file.
