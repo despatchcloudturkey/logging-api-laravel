@@ -1,6 +1,7 @@
 {
   "name": "despatchcloudturkey/logging-api-laravel",
   "description": "The Logging API laravel bridge.",
+  "license": "MIT",
   "authors": [
     {
       "name": "Anilcan Cakir",
