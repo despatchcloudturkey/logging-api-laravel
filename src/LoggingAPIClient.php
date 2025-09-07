@@ -67,7 +67,7 @@ class LoggingAPIClient
      */
     public function store(string $contents, string $id = null): string
     {
-        $ch = curl_init($this->url('/api/logs/create'));
+        $ch = $this->initCurl('/api/logs/create');
 
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
             'id' => $id,
@@ -97,7 +97,7 @@ class LoggingAPIClient
     public function upload(string $path, string $id = null): string
     {
         $file = new CURLFile($path);
-        $ch = curl_init($this->url('/api/logs/upload'));
+        $ch = $this->initCurl('/api/logs/upload');
 
         curl_setopt($ch, CURLOPT_POSTFIELDS, [
             'id' => $id,
@@ -125,7 +125,7 @@ class LoggingAPIClient
      */
     public function delete(string $id): string
     {
-        $ch = curl_init($this->url("/api/logs/{$id}/delete"));
+        $ch = $this->initCurl("/api/logs/{$id}/delete");
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 
@@ -150,7 +150,7 @@ class LoggingAPIClient
      */
     public function get(string $id)
     {
-        $ch = curl_init($this->url("/api/logs/{$id}"));
+        $ch = $this->initCurl("/api/logs/{$id}");
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers());
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch);
@@ -169,7 +169,7 @@ class LoggingAPIClient
      */
     public function response(string $id)
     {
-        $ch = curl_init($this->url("/api/logs/{$id}"));
+        $ch = $this->initCurl("/api/logs/{$id}");
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers());
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, true);
@@ -192,6 +192,20 @@ class LoggingAPIClient
 
         $response->setContent($result);
         return $response;
+    }
+
+    /**
+     * Initialize cURL with timeout defaults.
+     *
+     * @param string $uri
+     * @return resource
+     */
+    protected function initCurl(string $uri)
+    {
+        $ch = curl_init($this->url($uri));
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        return $ch;
     }
 
     /**
